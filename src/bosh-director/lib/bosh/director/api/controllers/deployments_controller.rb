@@ -198,9 +198,9 @@ module Bosh::Director
         deployments = @deployment_manager.all_by_name_asc
           .select { |deployment| @permission_authorizer.is_granted?(deployment, :read, token_scopes) }
           .map do |deployment|
-          cloud_config = if deployment.cloud_config.nil?
+          cloud_config = if deployment.cloud_config_id.nil?
                            'none'
-                         elsif deployment.cloud_config == latest_cloud_config
+                         elsif deployment.cloud_config_id == latest_cloud_config.id
                            'latest'
                          else
                            'outdated'

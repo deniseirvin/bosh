@@ -12,7 +12,10 @@ module Bosh::Director
       end
 
       def all_by_name_asc
-        Bosh::Director::Models::Deployment.order_by(Sequel.asc(:name)).all
+        Bosh::Director::Models::Deployment
+            .eager_graph(:teams, :stemcells, release_versions: :release)
+            .order_by(Sequel.asc(Sequel.qualify(:deployments, :name)))
+            .all
       end
 
       def create_deployment(username, manifest_text, cloud_config, runtime_configs, deployment, options = {}, context_id = '')
